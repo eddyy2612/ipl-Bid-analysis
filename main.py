@@ -140,7 +140,7 @@ if st.session_state.page == "home":
         unsafe_allow_html=True
     )
     st.image("./data/cricket.jpg.webp", use_column_width=True)
-    if st.button("Enter Dashboard"):
+    if st.button("Double Click to Enter"):
         st.session_state.page = "dashboard"
     st.markdown('</div>', unsafe_allow_html=True)
     st.stop()
