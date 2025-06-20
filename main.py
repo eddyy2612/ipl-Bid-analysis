@@ -12,6 +12,10 @@ from features.live_match_prediction import live_match_prediction
 from features.batsman_vs_bowler_stats import batsman_vs_bowler_stats
 from features.choose_the_best import choose_the_best
 
+# Initialize session state
+if "page" not in st.session_state:
+    st.session_state.page = "home"
+
 # Set page config with custom styling
 st.set_page_config(
     page_title="IPL Analysis Dashboard",
@@ -117,15 +121,22 @@ st.markdown(
         background-color: #cc0000;
         transform: scale(1.1);
     }
+    .go-back-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: #d33682;
+    }
+    .go-back-button>button:hover {
+        background-color: #ff8c00;
+        transform: scale(1.1);
+    }
     </style>
     """,
     unsafe_allow_html=True
 )
 
 # Home page
-if "page" not in st.session_state:
-    st.session_state.page = "home"
-
 if st.session_state.page == "home":
     st.markdown('<div class="hero">', unsafe_allow_html=True)
     st.title(":blue[Welcome to IPL Analysis] :sunglasses:")
@@ -139,9 +150,10 @@ if st.session_state.page == "home":
         """,
         unsafe_allow_html=True
     )
-    st.image("./data/cricket.jpg.webp", use_column_width=True)
-    if st.button("Double Click to Enter"):
+    st.image("./data/cricket.jpg.webp", use_container_width=True)
+    if st.button("Enter Dashboard"):
         st.session_state.page = "dashboard"
+        st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
     st.stop()
 
@@ -162,75 +174,99 @@ if st.session_state.page == "dashboard":
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Feature selection (mimicking event categories)
+    # Feature selection
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.button("Team vs Team Growth"):
-            st.session_state.selected_feature = "Team vs Team Growth"
+            st.session_state.page = "team_vs_team_growth"
+            st.rerun()
     with col2:
         if st.button("Bowler Comparison"):
-            st.session_state.selected_feature = "Bowler Comparison"
+            st.session_state.page = "bowler_comparison"
+            st.rerun()
     with col3:
         if st.button("Season Stats"):
-            st.session_state.selected_feature = "Season Stats"
+            st.session_state.page = "season_stats"
+            st.rerun()
 
     col4, col5, col6 = st.columns(3)
     with col4:
         if st.button("Winning Probability"):
-            st.session_state.selected_feature = "Winning Probability"
+            st.session_state.page = "winning_probability"
+            st.rerun()
     with col5:
         if st.button("Top Batsmen Strike Rate"):
-            st.session_state.selected_feature = "Top Batsmen Strike Rate"
+            st.session_state.page = "top_batsmen_strike_rate"
+            st.rerun()
     with col6:
         if st.button("Highest Targets Set"):
-            st.session_state.selected_feature = "Highest Targets Set"
+            st.session_state.page = "highest_targets_set"
+            st.rerun()
 
     col7, col8, col9 = st.columns(3)
     with col7:
         if st.button("Player vs Team Stats"):
-            st.session_state.selected_feature = "Player vs Team Stats"
+            st.session_state.page = "player_vs_team_stats"
+            st.rerun()
     with col8:
         if st.button("Overall Team Performance"):
-            st.session_state.selected_feature = "Overall Team Performance"
+            st.session_state.page = "overall_team_performance"
+            st.rerun()
     with col9:
         if st.button("Live Match Prediction"):
-            st.session_state.selected_feature = "Live Match Prediction"
+            st.session_state.page = "live_match_prediction"
+            st.rerun()
 
     col10, col11, col12 = st.columns(3)
     with col10:
         if st.button("Batsman vs Bowler Stats"):
-            st.session_state.selected_feature = "Batsman vs Bowler Stats"
+            st.session_state.page = "batsman_vs_bowler_stats"
+            st.rerun()
     with col11:
         if st.button("Choose the Best", key="choose_the_best_button"):
-            st.session_state.selected_feature = "Choose the Best"
+            st.session_state.page = "choose_the_best"
+            st.rerun()
 
-    # Display selected feature
-    if "selected_feature" in st.session_state:
-        st.markdown('<div style="margin-top: 20px;">', unsafe_allow_html=True)
-        st.subheader(st.session_state.selected_feature)
-        if st.session_state.selected_feature == "Team vs Team Growth":
-            team_vs_team_growth(matches, teams, deliveries, seasons)
-        elif st.session_state.selected_feature == "Bowler Comparison":
-            bowler_comparison(deliveries, matches, players)
-        elif st.session_state.selected_feature == "Season Stats":
-            season_stats(merged_df, bowler_data, matches, teams, players, seasons)
-        elif st.session_state.selected_feature == "Winning Probability":
-            winning_probability(matches, teams)
-        elif st.session_state.selected_feature == "Top Batsmen Strike Rate":
-            top_batsmen_strike_rate(deliveries)
-        elif st.session_state.selected_feature == "Highest Targets Set":
-            highest_targets_set(matches)
-        elif st.session_state.selected_feature == "Player vs Team Stats":
-            player_vs_team_stats(merged_df, bowler_data, players, teams)
-        elif st.session_state.selected_feature == "Overall Team Performance":
-            overall_team_performance(matches, teams)
-        elif st.session_state.selected_feature == "Live Match Prediction":
-            live_match_prediction(matches, deliveries, teams, venues)
-        elif st.session_state.selected_feature == "Batsman vs Bowler Stats":
-            batsman_vs_bowler_stats(matches, deliveries, players, teams, venues, seasons)
-        elif st.session_state.selected_feature == "Choose the Best":
-            choose_the_best(matches, deliveries, players, seasons)
-        st.markdown('</div>', unsafe_allow_html=True)
+# Feature pages
+if st.session_state.page in ["team_vs_team_growth", "bowler_comparison", "season_stats", "winning_probability",
+                            "top_batsmen_strike_rate", "highest_targets_set", "player_vs_team_stats",
+                            "overall_team_performance", "live_match_prediction", "batsman_vs_bowler_stats",
+                            "choose_the_best"]:
+    st.markdown('<div style="margin-top: 20px;">', unsafe_allow_html=True)
+    st.subheader(st.session_state.page.replace("_", " ").title())
+    
+    # Go Back button at top left
+    st.markdown('<div class="go-back-button">', unsafe_allow_html=True)
+    if st.button("Go Back", key="go_back"):
+        st.session_state.page = "dashboard"
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Render the selected feature
+    if st.session_state.page == "team_vs_team_growth":
+        team_vs_team_growth(matches, teams, deliveries, seasons)
+    elif st.session_state.page == "bowler_comparison":
+        bowler_comparison(deliveries, matches, players)
+    elif st.session_state.page == "season_stats":
+        season_stats(merged_df, bowler_data, matches, teams, players, seasons)
+    elif st.session_state.page == "winning_probability":
+        winning_probability(matches, teams)
+    elif st.session_state.page == "top_batsmen_strike_rate":
+        top_batsmen_strike_rate(deliveries)
+    elif st.session_state.page == "highest_targets_set":
+        highest_targets_set(matches)
+    elif st.session_state.page == "player_vs_team_stats":
+        player_vs_team_stats(merged_df, bowler_data, players, teams)
+    elif st.session_state.page == "overall_team_performance":
+        overall_team_performance(matches, teams)
+    elif st.session_state.page == "live_match_prediction":
+        live_match_prediction(matches, deliveries, teams, venues)
+    elif st.session_state.page == "batsman_vs_bowler_stats":
+        batsman_vs_bowler_stats(matches, deliveries, players, teams, venues, seasons)
+    elif st.session_state.page == "choose_the_best":
+        choose_the_best(matches, deliveries, players, seasons)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # Footer
     st.markdown('<div class="footer">About IPL Analysis | © 2025</div>', unsafe_allow_html=True)
