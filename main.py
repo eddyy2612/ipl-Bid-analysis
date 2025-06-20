@@ -150,7 +150,7 @@ if st.session_state.page == "home":
         """,
         unsafe_allow_html=True
     )
-    st.image("./data/cricket.jpg.webp", use_container_width=True)
+    st.image("./data/cricket.jpg.webp", use_column_width=True)
     if st.button("Enter Dashboard"):
         st.session_state.page = "dashboard"
         st.rerun()
